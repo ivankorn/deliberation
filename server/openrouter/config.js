@@ -320,7 +320,7 @@ function resolveModels(modelsRaw) {
       addInvalid(i, id, `models["${id}"] must be an object (got ${JSON.stringify(m)})`);
       continue;
     }
-    const ALLOWED_MODEL_PROVIDERS = new Set(["openrouter", "ollama", "lmstudio"]);
+    const ALLOWED_MODEL_PROVIDERS = new Set(["openrouter", "ollama", "lmstudio", "google"]);
     if (typeof m.provider !== "string" || !m.provider.trim()) {
       addInvalid(i, id, `models["${id}"] needs a provider (must be one of: ${[...ALLOWED_MODEL_PROVIDERS].join(", ")})`); continue;
     }

@@ -275,8 +275,8 @@ async function resolveArbiter(spec, selected, registry, getConfig) {
     const models = (cfg.openrouter && cfg.openrouter.models) || [];
     const model = models.find((/** @type {any} */ m) => m && m.alias === id);
     const prov = (model && model.provider) || "openrouter";
-    const targetProvider = registry.get(prov) || registry.get("openrouter");
-    const isProvEnabled = providerEnabled(cfg, prov) && !(prov === "openrouter" && cfg.openrouter && cfg.openrouter.enabled === false);
+    const targetProvider = prov === "google" ? registry.get("gemini") : (registry.get(prov) || registry.get("openrouter"));
+    const isProvEnabled = providerEnabled(cfg, prov === "google" ? "gemini" : prov) && !(prov === "openrouter" && cfg.openrouter && cfg.openrouter.enabled === false);
     if (targetProvider && model && isProvEnabled) return { mode: "server", provider: pinAlias(targetProvider, model, cfg) };
     return auto(`configured arbiter model '${id}' is not available`);
   }

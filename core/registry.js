@@ -170,7 +170,9 @@ function makeRegistry(providers) {
     const res = [];
     for (const d of delegates) {
       const prov = d.provider || "openrouter";
-      const targetProvider = byName.get(prov) || byName.get("openrouter");
+      const targetProvider = prov === "google"
+        ? (byName.get("gemini") || byName.get("openrouter"))
+        : (byName.get(prov) || byName.get("openrouter"));
       if (targetProvider) {
         res.push(pinAlias(targetProvider, d, config));
       }
