@@ -257,3 +257,31 @@ test("LP3: validateConfig accepts models with colons, dots, and slashes in model
   assert.equal(resolved.openrouter.models[1].model, "glm-5.3:cloud");
   assert.equal(resolved.openrouter.models[2].model, "custom/model:v1.0");
 });
+
+test("LP-B17: delegate.apiBase overrides provider-level apiBase in pinAlias and openai-compatible provider", async () => {
+  let calledOpts = null;
+  const mockBridge = {
+    callOpenRouter: async (opts) => {
+      calledOpts = opts;
+      return { text: "pong", usage: {} };
+    },
+    buildInitialTurns: () => [],
+    buildMessages: () => [],
+  };
+  const baseProvider = makeOpenAICompatibleProvider({
+    name: "ollama",
+    apiBase: "http://192.168.1.111:11434/v1",
+    bridge: mockBridge,
+    resolveModel: (r) => r.model,
+  });
+  const delegate = {
+    alias: "local-mod",
+    provider: "ollama",
+    model: "granite4.2:3b",
+    apiBase: "http://127.0.0.1:11434/v1",
+  };
+  const pinned = pinAlias(baseProvider, delegate, {});
+  await pinned.ask({ prompt: "hi" });
+  assert.equal(calledOpts.apiBase, "http://127.0.0.1:11434/v1");
+});
+

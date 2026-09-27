@@ -116,6 +116,7 @@ function pinAlias(baseProvider, delegate, config) {
       const r = await baseProvider.ask({
         ...req,
         model: delegate.model,
+        apiBase: delegate.apiBase || req.apiBase,
         apiKey: delegate.apiKey || req.apiKey,
         // delegate.reasoning_effort is validated as a string upstream; cast to the
         // DelegationRequest union (the bridge tolerates any effort string).
